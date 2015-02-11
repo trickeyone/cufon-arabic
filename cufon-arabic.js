@@ -44,9 +44,15 @@ var ArabicStyle = {
 
   convert: function( el ) {
     if( typeof el.textContent != 'undefined') {
-      el.textContent = ArabicStyle.convertText( el.textContent );
+      if( typeof el.originalText == 'undefined') {
+        el.originalText = el.textContent;
+      }
+      el.textContent = ArabicStyle.convertText( el.originalText );
     } else {
-      el.innerText = ArabicStyle.convertText( el.innerText );
+      if( typeof el.originalText == 'undefined') {
+        el.originalText = el.innerText;
+      }
+      el.innerText = ArabicStyle.convertText( el.originalText );
     }
   }
 };
