@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2015 Josh England
+ * Licensed under the MIT license.
+ *
+ * @version 1.00
+ *
+ * @type {{convertText: Function, fixElement: Function, convert: Function}}
+ */
+
 var ArabicStyle = {
   convertText: function( val ) {
     var isArabic = function( char ) {
@@ -42,7 +51,7 @@ var ArabicStyle = {
     return r.join( ' ' );
   },
 
-  convert: function( el ) {
+  fixElement: function( el ) {
     if( typeof el.textContent != 'undefined') {
       if( typeof el.originalText == 'undefined') {
         el.originalText = el.textContent;
@@ -53,6 +62,17 @@ var ArabicStyle = {
         el.originalText = el.innerText;
       }
       el.innerText = ArabicStyle.convertText( el.originalText );
+    }
+  },
+
+  convert: function( el, options ) {
+    var node, type, next;
+    for( node = el.firstChild; node; node = next ) {
+      type = node.nodeType;
+      next = node.nextSibling;
+      if( type == 3 ) {
+        ArabicStyle.fixElement( node );
+      }
     }
   }
 };
