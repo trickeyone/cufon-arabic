@@ -1,15 +1,26 @@
-/**
- * Copyright (c) 2015 Josh England
- * Licensed under the MIT license.
- *
- * @version 1.00
- *
- * @type {{convertText: Function, fixElement: Function, convert: Function}}
- */
-
 var ArabicStyle = {
   convertText: function( val ) {
     var isArabic = function( char ) {
+      //              I       E       M       B
+      //var r = {
+      //  0x0623: [ 0xFE83, 0xFE84 ],
+      //  0x0628: [ 0xFE8F, 0xFE90, 0xFE92, 0xFE91 ],
+      //  0x062A: [ 0xFE95, 0xFE96, 0xFE98, 0xFE97 ],
+      //  0x062B: [ 0xFE99, 0xFE9A, 0xFE9C, 0xFE9B ],
+      //  0x062C: [ 0xFE9D, 0xFE9E, 0xFEA0, 0xFE9F ],
+      //  0x062D: [ 0xFEA1, 0xFEA2, 0xFEA4, 0xFE93 ],
+      //  0x062E: [ 0xFEA5, 0xFEA6, 0xFEA8, 0xFE97 ],
+      //  0x062F: [ 0xFEA9, 0xFEAA ],
+      //  0x0630: [ 0xFEAB, 0xFEAC ],
+      //  0x0631: [ 0xFEAD, 0xFEAE ],
+      //  0x0632: [ 0xFEAF, 0xFEB0 ],
+      //  0x0633: [ 0xFEB1, 0xFEB2, 0xFEB4, 0xFEB3 ],
+      //  0x0634: [ 0xFEB5, 0xFEB6, 0xFEB8, 0xFEB7 ],
+      //  0x0635: [ 0xFEB9, 0xFEBA, 0xFEBC, 0xFEBB ],
+      //  0x0636: [ 0xFEBD, 0xFEBE, 0xFEC0, 0xFEBF ],
+      //};
+
+
       var arabicRanges = [
         [ 0x0600, 0x06FF ], // Main characters
         [ 0x0750, 0x076D ], // Supplemental
@@ -32,7 +43,7 @@ var ArabicStyle = {
     var r = [], prevArabic = false;
     for( var a = val.split(' '), i = 0; i < a.length; i++ ) {
       var br = [], hasArabic = false;
-      for( var b = a[i].split(''), j = 0; j < b.length; j++ ) {
+      for( var b = a[i], j = 0; j < b.length; j++ ) {
         if( isArabic( b[ j ].charCodeAt( 0 ) ) ) {
           br.unshift( b[j] );
           hasArabic = true;
@@ -40,12 +51,13 @@ var ArabicStyle = {
           br.push( b[j] );
         }
       }
-      if( prevArabic && hasArabic ) {
-        r.splice( r.length - 1, 0, br.join( '' ) );
+      if( prevArabic && hasArabic !== false ) {
+        r.splice( hasArabic, 0, br.join( '' ) );
+        //r.unshift( br.join('') );
       } else {
         r.push( br.join( '' ) );
       }
-      prevArabic = hasArabic;
+      prevArabic = hasArabic ? r.length - 1 : false;
     }
 
     return r.join( ' ' );
